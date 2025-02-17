@@ -11,6 +11,7 @@ import { UserEntity } from '../models/user_entity';
 import { AuthService } from 'src/auth/service/auth.service';
 import { User, UserRole } from '../models/user_interface';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { CustomBadRequestFilter } from 'src/expection/bad_exception';
 
 @Injectable()
 export class UserService {
@@ -32,19 +33,17 @@ export class UserService {
       }
 
       // Hash the password
-      const passwordHash = await this.authService.hashPassword(user.password);
+      const hashPassword = await this.authService.hashPassword(user.password);
 
-      // Create new user entity
-      const newUser = new UserEntity();
-      newUser.name = user.name;
-      newUser.username = user.username;
-      newUser.email = user.email;
-      newUser.password = passwordHash;
+      const newUser = this.userRepository.create(
+        Object.assign(user, { password: hashPassword }),
+      );
 
       const savedUser = await this.userRepository.save(newUser);
 
-      // Return user data without password
       const { password, ...result } = savedUser;
+      console.log(result);
+
       return result;
     } catch (err) {
       throw new InternalServerErrorException(err);
