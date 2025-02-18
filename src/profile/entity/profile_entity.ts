@@ -1,15 +1,25 @@
 import { UserEntity } from 'src/user/models/user_entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity({
+  name: 'profiles',
+})
 export class ProfileEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  profileImage: string;
+  @Column({
+    nullable: true,
+  })
+  profilePicture: string;
 
-  @Column()
+  @Column({ nullable: true })
   bio: string;
 
   @OneToOne(() => UserEntity, (user: UserEntity) => user.profile)

@@ -68,7 +68,9 @@ export class UserService {
   }
 
   async findAll(): Promise<Partial<User>[]> {
-    const users = await this.userRepository.find();
+    const users = await this.userRepository.find({
+      relations: ['profile'],
+    });
     return plainToInstance(UserEntity, users);
   }
 
