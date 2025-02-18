@@ -5,8 +5,7 @@ import { CustomBadRequestFilter } from './expection/bad_exception';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 3000);
-  app.useGlobalFilters(new CustomBadRequestFilter());
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -14,5 +13,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

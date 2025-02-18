@@ -9,7 +9,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
+
+@Entity({
+  name: 'User',
+})
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,7 +32,10 @@ export class UserEntity {
   })
   email: string;
 
-  @Column()
+  @Column({
+    select: false,
+  })
+  @Exclude()
   password: string;
 
   @OneToOne(() => ProfileEntity, {
@@ -37,8 +45,14 @@ export class UserEntity {
   @JoinColumn()
   @IsOptional()
   profile: ProfileEntity | null;
+
   @BeforeInsert()
   emailToLowerCase() {
     this.email = this.email.toLowerCase();
+  }
+
+  @BeforeInsert()
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 12);
   }
 }
