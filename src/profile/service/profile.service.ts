@@ -17,7 +17,7 @@ export class ProfileService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-  async createProfile(userId: number, profileDto: CreateProfileDto) {
+  async updateProfile(userId: number, profileDto: CreateProfileDto) {
     const userExists = await this.userRepository.findOne({
       where: { id: userId },
     });
@@ -26,16 +26,18 @@ export class ProfileService {
       throw new NotFoundException('User not found');
     }
 
-    // Check if a profile already exists for the user
     const existingProfile = await this.profilerepository.findOne({
       where: { user: { id: userId } },
     });
 
     if (existingProfile) {
-      throw new BadRequestException('User already has a profile');
+      const updatedProfile = this.profilerepository.merge(
+        existingProfile,
+        profileDto,
+      );
+      return await this.profilerepository.save(updatedProfile);
     }
 
-    // Create and save the profile
     const newProfile = this.profilerepository.create({
       ...profileDto,
       user: userExists,
