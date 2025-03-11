@@ -12,7 +12,7 @@ export class CategoriesService {
   constructor() {}
   async create(createCategoryDto: CreateCategoryDto) {
     const exitCategory = await this.categoryRepository.findOne({
-      where: { name: createCategoryDto.name },
+      where: { title: createCategoryDto.title },
     });
 
     if (exitCategory) {
@@ -22,19 +22,32 @@ export class CategoriesService {
     return await this.categoryRepository.save(category);
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll() {
+    return await this.categoryRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: number) {
+    return await this.categoryRepository.findOne({
+      where: { id: id },
+    });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.categoryRepository.findOne({
+      where: { id: id },
+    });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    Object.assign(category, updateCategoryDto);
+    return await this.categoryRepository.save(category);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.categoryRepository.delete(id);
+    if (category.affected === 0) {
+      throw new NotFoundException('User not found');
+    }
+    return { message: 'Category has been deleted successfully' };
   }
 }

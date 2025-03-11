@@ -1,13 +1,12 @@
 import { IsOptional, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
-  @IsString()
-  name: string;
+  @IsString({
+    message: 'Title is required',
+  })
+  title: string;
 
   @IsOptional()
   @IsString()
   content: string;
-
-  @IsString()
-  slug: string;
 }

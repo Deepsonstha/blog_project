@@ -5,12 +5,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
+import { Post } from 'src/post/entities/post.entity';
 
 @Entity({
   name: 'User',
@@ -37,6 +39,9 @@ export class UserEntity {
   })
   @Exclude()
   password: string;
+
+  @OneToMany(() => Post, (post) => post.author)
+  post: Post;
 
   @OneToOne(() => ProfileEntity, {
     nullable: true,

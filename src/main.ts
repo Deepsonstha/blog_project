@@ -9,9 +9,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Blog Api')
-    .setDescription('The cats API description')
+    .setDescription('The Blog API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('Blog')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   app.useGlobalPipes(

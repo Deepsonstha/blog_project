@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -15,14 +14,11 @@ export class Category {
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column({
-    unique: true,
+    nullable: true,
   })
-  slug: string;
-
-  @Column('text')
   content: string;
 
   @CreateDateColumn()

@@ -1,4 +1,5 @@
 import { Category } from 'src/categories/entities/category.entity';
+import { UserEntity } from 'src/user/models/user_entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -16,11 +17,14 @@ export class Post {
   @Column()
   title: string;
 
-  @Column({ unique: true })
-  slug: string;
+  @Column({ nullable: true })
+  subtitle?: string;
 
-  @Column('text')
-  content: string;
+  @Column({ nullable: true })
+  image?: string;
+
+  @Column()
+  description: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -34,4 +38,11 @@ export class Post {
     onDelete: 'SET NULL',
   })
   category?: Category;
+
+  // Many posts belong to one user (author)
+  @ManyToOne(() => UserEntity, (user) => user.post, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  author: UserEntity;
 }

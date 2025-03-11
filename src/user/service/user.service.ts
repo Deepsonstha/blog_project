@@ -69,7 +69,7 @@ export class UserService {
 
   async findAll(): Promise<Partial<User>[]> {
     const users = await this.userRepository.find({
-      relations: ['profile'],
+      relations: ['profile', 'post'],
     });
     return plainToInstance(UserEntity, users);
   }
@@ -77,7 +77,6 @@ export class UserService {
   async deleteUser(id: number) {
     try {
       const deletedUser = await this.userRepository.delete(id);
-      console.log('deletedUser ::', deletedUser);
       if (deletedUser.affected === 0) {
         throw new NotFoundException('User not found');
       }
